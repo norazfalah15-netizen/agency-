@@ -281,7 +281,7 @@ function render(){
     '<div class="seg" role="group" aria-label="طريقة العرض"><button data-act="mode" data-v="site" aria-pressed="'+(ui.mode==="site")+'">منظور الطالب</button><button data-act="mode" data-v="admin" aria-pressed="'+(ui.mode==="admin")+'">منظور المالك</button></div>'+
     '<span class="tag">مثال تجريبي</span></div></div>';
   document.body.classList.toggle("is-admin",ui.mode==="admin");
-  h+='<div class="who"><div class="wrap">'+(ui.mode==="site"?"تشوف الموقع الحين مثل ما يشوفه الطالب":"تشوف لوحة التحكم مثل ما يشوفها مالك الموقع")+'</div></div>';
+  h+='<div class="who"><div class="wrap">'+(ui.mode==="site"?"تشوف الموقع الحين مثل ما يشوفه الطالب":"تشوف الموقع الحين مثل ما يشوفه مالك الموقع")+'</div></div>';
   h+=ui.mode==="site"?site():admin();
   $("app").innerHTML=h;
 }
