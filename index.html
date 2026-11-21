@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>وكالة منصات الكورسات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout idea: right-aligned editorial column; the one loud element is the hero mock that re-skins itself. */
+  --paper:#EEF0F6;
+  --surface:#FFFFFF;
+  --ink:#161B3A;
+  --muted:#5A6082;
+  --cobalt:#2F4BD8;
+  --saffron:#F2B33D;
+  --line:#D5D9E8;
+  --display:"Alexandria","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.8}
+h1,h2,h3{font-family:var(--display);line-height:1.35;margin:0;text-wrap:balance}
+p{margin:0}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:3px}
+[hidden]{display:none !important}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+/* buttons */
+.btn{display:inline-block;border:0;border-radius:999px;padding:13px 26px;font-weight:600;text-decoration:none;font-family:var(--display);font-size:16px;line-height:1.4}
+.btn-main{background:var(--cobalt);color:#fff}
+.btn-quiet{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn-sun{background:var(--saffron);color:var(--ink)}
+
+/* nav */
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 0}
+.brand{font-family:var(--display);font-weight:800;font-size:20px;display:flex;align-items:center;gap:10px}
+.brand i{width:14px;height:14px;background:var(--saffron);border-radius:4px;transform:rotate(45deg);display:block}
+.nav .btn{padding:9px 18px;font-size:14px}
+
+/* hero */
+.hero{display:grid;gap:36px;padding:28px 0 64px;align-items:center}
+.hero h1{font-size:clamp(34px,8.2vw,62px);font-weight:800;letter-spacing:-.01em}
+.hero p{color:var(--muted);font-size:18px;max-width:34em;margin-top:18px}
+.hero .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+@media(min-width:860px){.hero{grid-template-columns:1fr 1fr;padding:48px 0 88px}}
+
+/* the re-skinning mock */
+.mockbox{display:grid;gap:14px}
+.mock{--m-bg:#F4F6FF;--m-ink:#161B3A;--m-acc:#2F4BD8;--m-on:#fff;--m-r:14px;--m-font:"Alexandria",sans-serif;
+  background:var(--m-bg);color:var(--m-ink);border-radius:18px;border:2px solid var(--ink);overflow:hidden;font-family:var(--m-font);
+  box-shadow:10px 10px 0 var(--ink);transition:background .35s,color .35s}
+.mock-bar{display:flex;gap:6px;padding:10px 14px;border-bottom:2px solid var(--ink);background:var(--surface)}
+.mock-bar span{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.mock-in{padding:18px}
+.mock-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:700;font-size:15px}
+.mock-top b{background:var(--m-acc);color:var(--m-on);padding:5px 14px;border-radius:var(--m-r);font-size:12px;font-weight:600}
+.mock h3{font-family:var(--m-font);font-size:24px;margin:22px 0 6px}
+.mock small{display:block;opacity:.7;font-size:13px;font-family:var(--body)}
+.mock-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.mock-tile{background:var(--surface);border-radius:var(--m-r);padding:10px;font-size:12px;color:#161B3A;font-family:var(--body)}
+.mock-tile div{height:54px;border-radius:calc(var(--m-r) - 4px);background:var(--m-acc);opacity:.85;margin-bottom:8px}
+.mock-tile:last-child div{opacity:.45}
+.swatches{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.sw{width:38px;height:38px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 2px var(--line);padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+@media(prefers-reduced-motion:reduce){.mock{transition:none}html{scroll-behavior:auto}}
+
+/* sections */
+section{padding:56px 0}
+.sec-h{font-size:clamp(26px,5.5vw,38px);font-weight:800;margin-bottom:10px}
+.sec-p{color:var(--muted);max-width:36em;margin-bottom:30px}
+.band{background:var(--ink);color:#fff}
+.band .sec-p{color:#B9BFDD}
+
+.why{display:grid;gap:26px}
+.why h3{font-size:19px;font-weight:600;margin-bottom:6px;color:var(--saffron)}
+.why p{color:#D6DAEE;font-size:16px}
+@media(min-width:760px){.why{grid-template-columns:repeat(3,1fr);gap:36px}}
+
+.incl{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:2px solid var(--ink)}
+.incl li{display:grid;grid-template-columns:1fr;gap:2px;padding:16px 0;border-bottom:1px solid var(--line)}
+.incl b{font-family:var(--display);font-weight:600}
+.incl span{color:var(--muted);font-size:16px}
+@media(min-width:760px){.incl li{grid-template-columns:240px 1fr;gap:24px}}
+
+/* example card */
+.ex{display:grid;gap:0;background:var(--surface);border:2px solid var(--ink);border-radius:18px;overflow:hidden;text-align:right;width:100%;padding:0;color:var(--ink)}
+.ex-art{background:var(--cobalt);min-height:150px;position:relative;overflow:hidden}
+.ex-art::before,.ex-art::after{content:"";position:absolute;border-radius:12px;background:#fff}
+.ex-art::before{inset:26px 26px auto auto;width:46%;height:14px;opacity:.9}
+.ex-art::after{inset:auto auto -20px 26px;width:38%;height:110px;background:var(--saffron);transform:rotate(-6deg)}
+.ex-txt{padding:22px;display:grid;gap:8px}
+.ex-txt h3{font-size:22px;font-weight:800}
+.ex-txt p{color:var(--muted);font-size:16px}
+.ex-txt .btn{justify-self:start;margin-top:6px}
+@media(min-width:760px){.ex{grid-template-columns:1fr 1.2fr}.ex-art{min-height:230px}}
+
+/* steps */
+.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:22px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start}
+.steps li::before{content:counter(s,arabic-indic);font-family:var(--display);font-weight:800;font-size:22px;width:52px;height:52px;border-radius:50%;background:var(--saffron);display:grid;place-items:center;line-height:1}
+.steps b{font-family:var(--display);font-weight:600;display:block}
+.steps span{color:var(--muted);font-size:16px}
+@media(min-width:760px){.steps{grid-template-columns:1fr 1fr;gap:30px 48px}}
+
+/* price */
+.price{background:var(--saffron);border-radius:22px;padding:30px 24px;display:grid;gap:18px}
+.price .num{font-family:var(--display);font-weight:800;font-size:clamp(40px,11vw,68px);line-height:1.1}
+.price .num small{font-size:.38em;font-weight:600;display:block;margin-bottom:6px}
+.price ul{margin:0;padding:0 20px 0 0;display:grid;gap:4px}
+@media(min-width:760px){.price{grid-template-columns:1fr 1fr;padding:44px;align-items:center}}
+
+/* faq */
+details{border-bottom:1px solid var(--line);padding:16px 0}
+details:first-of-type{border-top:2px solid var(--ink)}
+summary{font-family:var(--display);font-weight:600;cursor:pointer}
+details p{color:var(--muted);margin-top:8px;max-width:38em}
+
+/* contact */
+.contact{text-align:right;display:grid;gap:16px;justify-items:start}
+.todo{border:2px dashed #7C84B3;border-radius:12px;padding:10px 16px;font-size:15px;color:#B9BFDD}
+footer{padding:26px 0;color:var(--muted);font-size:14px}
+
+/* ============ demo: course platform ============ */
+#demo{--d-acc:#2F4BD8;background:#F4F6FF;min-height:100%}
+.d-note{background:var(--saffron);text-align:center;font-size:14px;padding:6px 12px;font-weight:500}
+.d-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0}
+.d-left{display:flex;align-items:center;gap:12px}
+.d-back{background:var(--surface);border:2px solid var(--ink);border-radius:50%;width:42px;height:42px;font-size:20px;line-height:1;color:var(--ink)}
+.d-name{font-family:var(--display);font-weight:800;font-size:19px}
+.d-login{background:transparent;border:0;box-shadow:inset 0 0 0 2px var(--ink);border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;color:var(--ink)}
+.d-hero{padding:18px 0 26px}
+.d-hero h1{font-size:clamp(28px,7vw,44px);font-weight:800}
+.d-hero p{color:var(--muted);margin-top:8px;max-width:32em}
+.d-grid{display:grid;gap:18px;padding-bottom:60px}
+@media(min-width:700px){.d-grid{grid-template-columns:repeat(3,1fr)}}
+.c-card{background:var(--surface);border:0;border-radius:16px;overflow:hidden;text-align:right;padding:0;color:var(--ink);display:grid;box-shadow:0 2px 0 var(--line)}
+.c-art{height:130px;display:grid;place-items:center}
+.c-art svg{width:56px;height:56px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.c-in{padding:16px;display:grid;gap:4px}
+.c-in h3{font-size:18px;font-weight:600}
+.c-in span{color:var(--muted);font-size:14px}
+.c-in b{font-family:var(--display);margin-top:6px}
+
+.cp{display:grid;gap:22px;padding:6px 0 60px}
+@media(min-width:860px){.cp{grid-template-columns:1.5fr 1fr;align-items:start}}
+.player{background:var(--ink);border-radius:16px;aspect-ratio:16/9;display:grid;place-items:center;position:relative;overflow:hidden;color:#fff}
+.player .ttl{position:absolute;top:14px;right:16px;left:16px;font-size:14px;opacity:.85}
+.play{width:68px;height:68px;border-radius:50%;border:0;background:var(--saffron);color:var(--ink);font-size:24px;line-height:1}
+.prog{position:absolute;bottom:0;right:0;left:0;height:6px;background:rgba(255,255,255,.2)}
+.prog i{display:block;height:100%;width:0;background:var(--saffron)}
+.lockmsg{text-align:center;padding:0 20px;display:grid;gap:12px;justify-items:center}
+.cp h2{font-size:24px;font-weight:800;margin-top:14px}
+.cp .desc{color:var(--muted);margin-top:6px}
+.side{background:var(--surface);border-radius:16px;padding:16px}
+.side h3{font-size:17px;font-weight:600;margin-bottom:4px}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0 12px}
+.bar i{display:block;height:100%;background:var(--d-acc);width:0}
+.lessons{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.lessons button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:right;background:transparent;border:0;border-radius:10px;padding:10px 12px;color:var(--ink);font-size:15px}
+.lessons button[aria-current="true"]{background:#E4E9FF;font-weight:600}
+.lessons em{font-style:normal;font-size:13px;color:var(--muted);white-space:nowrap}
+.buy{width:100%;margin-top:14px}
+
+dialog{border:0;border-radius:18px;padding:24px;width:min(92vw,400px);color:var(--ink);font-family:var(--body)}
+dialog::backdrop{background:rgba(22,27,58,.55)}
+dialog h3{font-size:21px;font-weight:800;margin-bottom:4px}
+dialog p{color:var(--muted);font-size:15px;margin-bottom:14px}
+dialog label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+dialog input{width:100%;padding:11px 12px;border:2px solid var(--line);border-radius:10px;font-family:inherit;font-size:16px;margin-bottom:12px;background:#fff;color:var(--ink)}
+dialog .row{display:flex;gap:10px;margin-top:6px}
+dialog .row .btn{flex:1;text-align:center}
+</style>
+</head>
+<body>
+
+<!-- ================= LANDING ================= -->
+<div id="landing">
+  <header class="wrap nav">
+    <div class="brand"><i></i><span>اسم الوكالة</span></div>
+    <a class="btn btn-main" href="#contact">اطلب منصتك</a>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <div>
+        <h1>منصة كورساتك، باسمك وبتصميم ما يشبه غيرك</h1>
+        <p>نبني لك موقعاً تبيع فيه كورساتك مباشرة لطلابك. أنت تجهّز المحتوى، ونحن نبني الصفحات والدفع وحسابات الطلاب.</p>
+        <div class="acts">
+          <a class="btn btn-main" href="#courses-demo">جرّب المثال</a>
+          <a class="btn btn-quiet" href="#price">السعر</a>
+        </div>
+      </div>
+
+      <div class="mockbox">
+        <div class="mock" id="mock" aria-live="polite">
+          <div class="mock-bar"><span></span><span></span><span></span></div>
+          <div class="mock-in">
+            <div class="mock-top"><span id="mName">أكاديمية نَسَق</span><b>دخول</b></div>
+            <h3 id="mHead">تعلّم إدارة مشروعك خطوة بخطوة</h3>
+            <small id="mSub">٣ كورسات · دروس مسجلة</small>
+            <div class="mock-tiles">
+              <div class="mock-tile"><div></div><span id="mT1">أساسيات المشروع</span></div>
+              <div class="mock-tile"><div></div><span id="mT2">التسعير</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="swatches">
+          <span>نفس الأساس، وشكل خاص لكل عميل:</span>
+          <button class="sw" style="background:#2F4BD8" aria-pressed="true" aria-label="شكل أكاديمية نَسَق" data-t="0"></button>
+          <button class="sw" style="background:#1F5A45" aria-pressed="false" aria-label="شكل دار الخط" data-t="1"></button>
+          <button class="sw" style="background:#7A2E5C" aria-pressed="false" aria-label="شكل استوديو لقطة" data-t="2"></button>
+        </div>
+      </div>
+    </div>
+
+    <section class="band">
+      <div class="wrap">
+        <h2 class="sec-h">ليش منصة خاصة فيك؟</h2>
+        <p class="sec-p">المنصات الجاهزة سهلة في البداية، لكنك تبقى مستأجراً عندها.</p>
+        <div class="why">
+          <div><h3>الأرباح لك</h3><p>المنصات الجاهزة تأخذ اشتراكاً شهرياً، وبعضها يأخذ نسبة من كل بيعة. في منصتك تدفع مرة واحدة للبناء.</p></div>
+          <div><h3>الشكل لك</h3><p>ما نستخدم قالباً يتكرر عند غيرك. الألوان والخطوط وترتيب الصفحات تُصمَّم على هوية مشروعك.</p></div>
+          <div><h3>الطلاب لك</h3><p>الموقع باسمك وعلى رابطك، وبيانات طلابك عندك أنت، مو عند منصة ثانية.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="sec-h">شنو تستلم؟</h2>
+        <p class="sec-p">موقع كامل جاهز للبيع من أول يوم.</p>
+        <ul class="incl">
+          <li><b>صفحة رئيسية</b><span>تعرّف بمشروعك وتقنع الزائر بالتسجيل.</span></li>
+          <li><b>صفحة الكورسات</b><span>كل كورساتك بأسعارها ووصفها في مكان واحد.</span></li>
+          <li><b>صفحة الدروس</b><span>مشغّل فيديو وقائمة دروس، والطالب يشوف تقدّمه.</span></li>
+          <li><b>حسابات الطلاب</b><span>كل طالب يدخل بحسابه ويلقى كورساته.</span></li>
+          <li><b>الدفع</b><span>الطالب يدفع ويُفتح له الكورس مباشرة.</span></li>
+          <li><b>عربي وعلى الجوال</b><span>الموقع من اليمين لليسار ومضبوط على كل الشاشات.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="wrap">
+        <h2 class="sec-h">أمثلة شغلنا</h2>
+        <p class="sec-p">افتح المثال وجرّبه بنفسك مثل ما بيجرّبه طالبك.</p>
+        <div class="ex">
+          <div class="ex-art" aria-hidden="true"></div>
+          <div class="ex-txt">
+            <h3>منصة كورسات</h3>
+            <p>أكاديمية تجريبية فيها كورسات، دروس، تسجيل دخول، وشراء. المحتوى وهمي والموقع شغّال.</p>
+            <a class="btn btn-main" href="#courses-demo">افتح المثال</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="sec-h">كيف نشتغل؟</h2>
+        <p class="sec-p">أربع خطوات من أول مكالمة إلى موقع يبيع.</p>
+        <ol class="steps">
+          <li><div><b>مكالمة تعارف</b><span>نفهم مشروعك وكورساتك وطلابك.</span></div></li>
+          <li><div><b>تصميم خاص</b><span>نعرض عليك شكل الموقع وتعتمده قبل البناء.</span></div></li>
+          <li><div><b>البناء والربط</b><span>نبني الصفحات ونربط الدفع وحسابات الطلاب، وأنت ترسل المحتوى.</span></div></li>
+          <li><div><b>التسليم</b><span>تستلم الموقع على رابطك ونعلّمك كيف تضيف كورساً جديداً.</span></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="price">
+      <div class="wrap">
+        <div class="price">
+          <div>
+            <div class="num"><small>يبدأ من</small>٢٬٠٠٠ دولار</div>
+            <p>دفعة واحدة مقابل البناء. السعر النهائي يتحدد بعد مكالمة التعارف حسب عدد الكورسات والمزايا.</p>
+          </div>
+          <div>
+            <ul>
+              <li>تصميم خاص بهوية مشروعك</li>
+              <li>كل الصفحات المذكورة فوق</li>
+              <li>ربط الدفع وحسابات الطلاب</li>
+              <li>رفع الموقع على رابطك</li>
+            </ul>
+            <a class="btn btn-main" href="#contact" style="margin-top:18px">اطلب منصتك</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <h2 class="sec-h" style="margin-bottom:22px">أسئلة تتكرر</h2>
+        <details><summary>أحتاج خبرة تقنية؟</summary><p>لا. أنت تجهّز الفيديوهات والنصوص، ونحن نتكفّل بالباقي.</p></details>
+        <details><summary>منو يجهّز المحتوى؟</summary><p>أنت. الفيديوهات وأسماء الدروس والأسعار من عندك، ونحن نرتبها في الموقع.</p></details>
+        <details><summary>الموقع يكون ملكي؟</summary><p>نعم. الموقع باسمك وعلى رابطك، وما تدفع لنا نسبة من مبيعاتك.</p></details>
+        <details><summary>موقعي بيطلع نفس المثال؟</summary><p>لا. المثال يوريك طريقة العمل فقط. موقعك يُصمَّم بألوانك وخطوطك وهويتك.</p></details>
+      </div>
+    </section>
+
+    <section class="band" id="contact">
+      <div class="wrap contact">
+        <h2 class="sec-h">جاهز تبدأ؟</h2>
+        <p class="sec-p" style="margin-bottom:0">راسلنا واحجز مكالمة التعارف. المكالمة مجانية.</p>
+        <span class="todo">هنا يُضاف رابط الواتساب أو الإيميل</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">اسم الوكالة. منصات كورسات بتصميم خاص.</footer>
+</div>
+
+<!-- ================= DEMO ================= -->
+<div id="demo" hidden>
+  <div class="d-note">مثال تجريبي. المحتوى وهمي والدفع غير حقيقي.</div>
+  <div class="wrap">
+    <div class="d-bar">
+      <div class="d-left">
+        <button class="d-back" id="dBack" aria-label="رجوع">←</button>
+        <span class="d-name">أكاديمية نَسَق</span>
+      </div>
+      <button class="d-login" id="dLogin">دخول</button>
+    </div>
+
+    <div id="dList">
+      <div class="d-hero">
+        <h1>تعلّم مهارة جديدة على راحتك</h1>
+        <p>كورسات مسجلة قصيرة. اشترِ الكورس مرة واحدة وارجع له متى ما بغيت.</p>
+      </div>
+      <div class="d-grid" id="dGrid"></div>
+    </div>
+
+    <div id="dCourse" hidden>
+      <div class="cp">
+        <div>
+          <div class="player" id="player"></div>
+          <h2 id="cTitle"></h2>
+          <p class="desc" id="cDesc"></p>
+        </div>
+        <aside class="side">
+          <h3>الدروس</h3>
+          <div class="bar"><i id="cBar"></i></div>
+          <ul class="lessons" id="cLessons"></ul>
+          <button class="btn btn-sun buy" id="cBuy"></button>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <dialog id="dlgLogin">
+    <form id="fLogin">
+      <h3>تسجيل الدخول</h3>
+      <p>تجريبي: اكتب أي اسم.</p>
+      <label for="inName">الاسم</label>
+      <input id="inName" required autocomplete="off">
+      <div class="row">
+        <button class="btn btn-main" type="submit">دخول</button>
+        <button class="btn btn-quiet" type="button" data-close>إلغاء</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgBuy">
+    <form id="fBuy">
+      <h3 id="buyTitle"></h3>
+      <p>تجريبي: ما راح يُسحب أي مبلغ.</p>
+      <label for="inMail">البريد الإلكتروني</label>
+      <input id="inMail" type="email" required autocomplete="off" dir="ltr">
+      <label for="inCard">رقم البطاقة</label>
+      <input id="inCard" inputmode="numeric" placeholder="0000 0000 0000 0000" dir="ltr" autocomplete="off">
+      <div class="row">
+        <button class="btn btn-main" type="submit" id="buyBtn"></button>
+        <button class="btn btn-quiet" type="button" data-close>إلغاء</button>
+      </div>
+    </form>
+  </dialog>
+</div>
+
+<script>
+/* ---------- hero mock themes ---------- */
+var themes=[
+ {bg:"#F4F6FF",ink:"#161B3A",acc:"#2F4BD8",on:"#fff",r:"14px",font:'"Alexandria",sans-serif',name:"أكاديمية نَسَق",head:"تعلّم إدارة مشروعك خطوة بخطوة",sub:"٣ كورسات · دروس مسجلة",t1:"أساسيات المشروع",t2:"التسعير"},
+ {bg:"#F3EFE0",ink:"#15362B",acc:"#1F5A45",on:"#F3EFE0",r:"2px",font:'"Reem Kufi",sans-serif',name:"دار الخط",head:"اكتب بخط الرقعة من أول أسبوع",sub:"٤ كورسات · تمارين قابلة للطباعة",t1:"خط الرقعة",t2:"خط النسخ"},
+ {bg:"#2A1424",ink:"#FBE9F1",acc:"#FF7A59",on:"#2A1424",r:"26px",font:'"IBM Plex Sans Arabic",sans-serif',name:"استوديو لقطة",head:"صوّر منتجاتك بجوالك",sub:"كورسان · دروس قصيرة",t1:"الإضاءة",t2:"التعديل"}
+];
+var mock=document.getElementById("mock");
+function setTheme(i){
+  var t=themes[i],s=mock.style;
+  s.setProperty("--m-bg",t.bg);s.setProperty("--m-ink",t.ink);s.setProperty("--m-acc",t.acc);
+  s.setProperty("--m-on",t.on);s.setProperty("--m-r",t.r);s.setProperty("--m-font",t.font);
+  document.getElementById("mName").textContent=t.name;
+  document.getElementById("mHead").textContent=t.head;
+  document.getElementById("mSub").textContent=t.sub;
+  document.getElementById("mT1").textContent=t.t1;
+  document.getElementById("mT2").textContent=t.t2;
+  document.querySelectorAll(".sw").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.t==i?"true":"false")});
+}
+document.querySelectorAll(".sw").forEach(function(b){b.addEventListener("click",function(){setTheme(+b.dataset.t)})});
+
+/* ---------- demo data ---------- */
+var icons={
+ chart:'<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+ cam:'<svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg>',
+ pen:'<svg viewBox="0 0 24 24"><path d="M4 20l4-1L20 7l-3-3L5 16l-1 4zM14 6l3 3"/></svg>'
+};
+var courses=[
+ {id:0,title:"إدارة المشاريع الصغيرة",desc:"من الفكرة إلى أول عميل: التخطيط، التسعير، والمتابعة.",price:"٢٥ د.ك",color:"#2F4BD8",icon:"chart",
+  lessons:["مقدمة الكورس","حدّد فكرتك","احسب تكاليفك","سعّر خدمتك","أول عميل"]},
+ {id:1,title:"تصوير المنتجات بالجوال",desc:"صور واضحة لمتجرك بدون كاميرا احترافية.",price:"١٨ د.ك",color:"#D9534F",icon:"cam",
+  lessons:["مقدمة الكورس","الإضاءة الطبيعية","الخلفيات","زوايا التصوير"]},
+ {id:2,title:"الخط العربي للمبتدئين",desc:"أساسيات خط الرقعة بتمارين يومية قصيرة.",price:"١٥ د.ك",color:"#1F5A45",icon:"pen",
+  lessons:["مقدمة الكورس","مسكة القلم","الحروف المفردة","وصل الحروف","كتابة جملة"]}
+];
+var owned={},done={},cur=null,lesson=0,timer=null,user=null;
+var $=function(id){return document.getElementById(id)};
+var ar=function(n){return String(n).replace(/\d/g,function(d){return "٠١٢٣٤٥٦٧٨٩"[d]})};
+
+function renderList(){
+  clearInterval(timer);cur=null;
+  $("dCourse").hidden=true;$("dList").hidden=false;
+  $("dGrid").innerHTML="";
+  courses.forEach(function(c){
+    var b=document.createElement("button");b.className="c-card";
+    b.innerHTML='<div class="c-art" style="background:'+c.color+'">'+icons[c.icon]+'</div><div class="c-in"><h3>'+c.title+'</h3><span>'+ar(c.lessons.length)+' دروس</span><b>'+(owned[c.id]?"مشترك":c.price)+'</b></div>';
+    b.addEventListener("click",function(){openCourse(c.id)});
+    $("dGrid").appendChild(b);
+  });
+}
+function openCourse(id){
+  cur=courses[id];lesson=0;
+  $("dList").hidden=true;$("dCourse").hidden=false;
+  $("demo").style.setProperty("--d-acc",cur.color);
+  $("cTitle").textContent=cur.title;$("cDesc").textContent=cur.desc;
+  renderCourse();window.scrollTo(0,0);
+}
+function unlocked(i){return i===0||owned[cur.id]}
+function renderCourse(){
+  clearInterval(timer);
+  var d=done[cur.id]||{};
+  var n=cur.lessons.filter(function(_,i){return d[i]}).length;
+  $("cBar").style.width=(n/cur.lessons.length*100)+"%";
+  $("cLessons").innerHTML="";
+  cur.lessons.forEach(function(t,i){
+    var li=document.createElement("li"),b=document.createElement("button");
+    b.setAttribute("aria-current",i===lesson?"true":"false");
+    var tag=d[i]?"تم ✓":(unlocked(i)?(i===0&&!owned[cur.id]?"مجاني":""):"مقفل");
+    b.innerHTML="<span>"+ar(i+1)+". "+t+"</span><em>"+tag+"</em>";
+    b.addEventListener("click",function(){lesson=i;renderCourse()});
+    li.appendChild(b);$("cLessons").appendChild(li);
+  });
+  var buy=$("cBuy");
+  buy.hidden=!!owned[cur.id];
+  buy.textContent="اشترِ الكورس · "+cur.price;
+  var p=$("player");
+  if(unlocked(lesson)){
+    p.innerHTML='<span class="ttl">'+cur.lessons[lesson]+'</span><button class="play" id="playBtn" aria-label="تشغيل الدرس">▶</button><div class="prog"><i id="pg"></i></div>';
+    $("playBtn").addEventListener("click",play);
+  }else{
+    p.innerHTML='<div class="lockmsg"><span>هذا الدرس مقفل. اشترِ الكورس لفتح كل الدروس.</span><button class="btn btn-sun" id="lockBuy">اشترِ الكورس</button></div>';
+    $("lockBuy").addEventListener("click",askBuy);
+  }
+}
+function play(){
+  var w=0,btn=$("playBtn");btn.hidden=true;
+  clearInterval(timer);
+  timer=setInterval(function(){
+    w+=2.5;var pg=$("pg");if(!pg){clearInterval(timer);return}
+    pg.style.width=w+"%";
+    if(w>=100){
+      clearInterval(timer);
+      (done[cur.id]=done[cur.id]||{})[lesson]=true;
+      var nx=lesson+1;
+      if(nx<cur.lessons.length&&unlocked(nx))lesson=nx;
+      renderCourse();
+    }
+  },100);
+}
+function askBuy(){
+  $("buyTitle").textContent=cur.title;
+  $("buyBtn").textContent="ادفع "+cur.price;
+  $("dlgBuy").showModal();
+}
+$("cBuy").addEventListener("click",askBuy);
+$("fBuy").addEventListener("submit",function(e){
+  e.preventDefault();owned[cur.id]=true;$("dlgBuy").close();e.target.reset();renderCourse();
+});
+$("dLogin").addEventListener("click",function(){
+  if(user){user=null;$("dLogin").textContent="دخول"}else $("dlgLogin").showModal();
+});
+$("fLogin").addEventListener("submit",function(e){
+  e.preventDefault();user=$("inName").value.trim();
+  $("dLogin").textContent="أهلاً "+user+" · خروج";
+  $("dlgLogin").close();e.target.reset();
+});
+document.querySelectorAll("[data-close]").forEach(function(b){b.addEventListener("click",function(){b.closest("dialog").close()})});
+$("dBack").addEventListener("click",function(){
+  if(cur)renderList();else location.hash="";
+});
+
+/* ---------- routing ---------- */
+function route(){
+  var demo=location.hash==="#courses-demo";
+  $("landing").hidden=demo;$("demo").hidden=!demo;
+  if(demo){renderList();window.scrollTo(0,0)}
+  else if(location.hash.length>1){var el=document.getElementById(location.hash.slice(1));if(el)el.scrollIntoView()}
+}
+window.addEventListener("hashchange",route);route();
+</script>
+</body>
+</html>
