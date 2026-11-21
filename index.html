@@ -107,7 +107,12 @@ section{padding:56px 0}
 .ex-txt h3{font-size:22px;font-weight:800}
 .ex-txt p{color:var(--muted);font-size:16px}
 .ex-txt .btn{justify-self:start;margin-top:6px}
-@media(min-width:760px){.ex{grid-template-columns:1fr 1.2fr}.ex-art{min-height:230px}}
+.exs{display:grid;gap:18px}
+@media(min-width:760px){.exs{grid-template-columns:1fr 1fr}}
+.ex-art.own{background:var(--ink);display:flex;align-items:flex-end;gap:12px;padding:26px}
+.ex-art.own::before,.ex-art.own::after{display:none}
+.ex-art.own i{flex:1;background:var(--saffron);border-radius:8px 8px 2px 2px;height:46%}
+.ex-art.own i:nth-child(2){height:78%}.ex-art.own i:nth-child(3){height:58%}.ex-art.own i:nth-child(4){height:92%;background:#fff}
 
 /* steps */
 .steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:22px}
@@ -225,13 +230,23 @@ footer{padding-block:26px;color:var(--muted);font-size:14px}
     <section id="work">
       <div class="wrap">
         <h2 class="sec-h">أمثلة شغلنا</h2>
-        <p class="sec-p">افتح المثال وجرّبه كطالب، وبعدها ادخل لوحة التحكم وجرّبه كصاحب الموقع.</p>
-        <div class="ex">
-          <div class="ex-art" aria-hidden="true"></div>
-          <div class="ex-txt">
-            <h3>منصة كورسات</h3>
-            <p>موقع كامل مثل اللي بتستلمه: موقع الطالب ولوحة التحكم. غيّر الألوان، أضف كورساً، وجرّب الشراء بنفسك.</p>
-            <a class="btn btn-main" href="demo.html">افتح المثال</a>
+        <p class="sec-p">مثال واحد بمنظورين: جرّبه كطالب، وجرّبه كمالك الموقع.</p>
+        <div class="exs">
+          <div class="ex">
+            <div class="ex-art" aria-hidden="true"></div>
+            <div class="ex-txt">
+              <h3>منظور الطالب</h3>
+              <p>الموقع مثل ما يشوفه طالبك: يتصفح الكورسات، يجرب الدرس المجاني، يشتري، ويتابع تقدمه.</p>
+              <a class="btn btn-main" href="demo.html">جرّب كطالب</a>
+            </div>
+          </div>
+          <div class="ex">
+            <div class="ex-art own" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <div class="ex-txt">
+              <h3>منظور مالك الموقع</h3>
+              <p>لوحة التحكم مثل ما بتستلمها: تضيف كورساتك، تغيّر الألوان والأسعار، وتشوف طلابك ومبيعاتك.</p>
+              <a class="btn btn-main" href="demo.html#admin">جرّب كمالك</a>
+            </div>
           </div>
         </div>
       </div>

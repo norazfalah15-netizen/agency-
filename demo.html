@@ -125,6 +125,16 @@ textarea.in{min-height:84px;resize:vertical;line-height:1.7}
 .learn{margin:8px 0 0;padding:0 20px 0 0;color:var(--muted);display:grid;gap:2px}
 
 /* ===== admin ===== */
+.who{background:var(--sun);font-size:13px;font-weight:500;text-align:center}
+.who .wrap{padding-block:4px}
+body.is-admin{background:#E6E8EF;padding-bottom:40px}
+body.is-admin .who{background:#C9CEE2}
+.a-head{background:var(--ink);color:#fff;border-top:1px solid rgba(255,255,255,.14)}
+.a-head .wrap{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-block:14px}
+.a-head b{font-family:var(--display);font-weight:800;font-size:19px;display:block;line-height:1.3}
+.a-head span{font-size:13px;opacity:.75}
+.a-head .pill{background:var(--sun);color:var(--ink);opacity:1}
+.adm,.a-head{--acc:#161B3A;--soft:#E1E4EF;--r:12px}
 .adm{display:grid;gap:14px;padding-top:14px}
 .a-nav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .a-nav::-webkit-scrollbar{display:none}
@@ -268,8 +278,10 @@ function render(){
   document.documentElement.style.setProperty("--acc",S.settings.color);
   document.documentElement.style.setProperty("--r",S.settings.radius+"px");
   var h='<div class="strip"><div class="wrap"><a href="index.html#work" aria-label="رجوع إلى واجهة">←</a>'+
-    '<div class="seg" role="group" aria-label="طريقة العرض"><button data-act="mode" data-v="site" aria-pressed="'+(ui.mode==="site")+'">موقع الطالب</button><button data-act="mode" data-v="admin" aria-pressed="'+(ui.mode==="admin")+'">لوحة التحكم</button></div>'+
+    '<div class="seg" role="group" aria-label="طريقة العرض"><button data-act="mode" data-v="site" aria-pressed="'+(ui.mode==="site")+'">منظور الطالب</button><button data-act="mode" data-v="admin" aria-pressed="'+(ui.mode==="admin")+'">منظور المالك</button></div>'+
     '<span class="tag">مثال تجريبي</span></div></div>';
+  document.body.classList.toggle("is-admin",ui.mode==="admin");
+  h+='<div class="who"><div class="wrap">'+(ui.mode==="site"?"تشوف الموقع الحين مثل ما يشوفه الطالب":"تشوف لوحة التحكم مثل ما يشوفها مالك الموقع")+'</div></div>';
   h+=ui.mode==="site"?site():admin();
   $("app").innerHTML=h;
 }
@@ -349,7 +361,7 @@ function sCourse(){
 function admin(){
   var tabs=[["overview","نظرة عامة"],["courses","الكورسات"],["students","الطلاب"],["orders","الطلبات"],["coupons","الكوبونات"],["settings","الإعدادات"]];
   var cur=ui.apage==="edit"?"courses":ui.apage;
-  return '<div class="wrap adm"><nav class="a-nav">'+tabs.map(function(t){return '<button data-act="atab" data-v="'+t[0]+'" aria-current="'+(cur===t[0])+'">'+t[1]+'</button>'}).join("")+'</nav><main class="a-main">'+
+  return '<header class="a-head"><div class="wrap"><div><b>لوحة التحكم</b><span>'+esc(S.settings.name)+'</span></div><span class="pill">مالك الموقع</span></div></header><div class="wrap adm"><nav class="a-nav">'+tabs.map(function(t){return '<button data-act="atab" data-v="'+t[0]+'" aria-current="'+(cur===t[0])+'">'+t[1]+'</button>'}).join("")+'</nav><main class="a-main">'+
    ({overview:aOverview,courses:aCourses,edit:aEdit,students:aStudents,orders:aOrders,coupons:aCoupons,settings:aSettings}[ui.apage])()+'</main></div>';
 }
 function aOverview(){
@@ -369,7 +381,7 @@ function aOverview(){
    '<div class="card try"><h3>جرّب بنفسك</h3><ul>'+
    '<li><span>غيّر لون الموقع واسمه</span><button class="btn b-sm" data-act="atab" data-v="settings">الإعدادات</button></li>'+
    '<li><span>أضف كورساً جديداً</span><button class="btn b-sm" data-act="newCourse">إضافة</button></li>'+
-   '<li><span>اشترِ كورساً كطالب وشوف الطلب يوصل هنا</span><button class="btn b-sm" data-act="mode" data-v="site">الموقع</button></li></ul></div>';
+   '<li><span>اشترِ كورساً كطالب وشوف الطلب يوصل هنا</span><button class="btn b-sm" data-act="mode" data-v="site">منظور الطالب</button></li></ul></div>';
 }
 function aCourses(){
   return '<div class="a-title"><h1>الكورسات</h1><button class="btn b-acc b-sm" data-act="newCourse">إضافة كورس</button></div><div class="card"><div class="rows">'+
