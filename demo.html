@@ -259,7 +259,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 var ui={mode:"site",page:"home",cid:null,lesson:0,cat:"الكل",q:"",apage:"overview",edit:null,arm:false,coupon:null};
 var timer=null,toastT=null;
 var $=function(id){return document.getElementById(id)};
-var AR="٠١٢٣٤٥٦٧٨٩";
+var AR="0123456789";
 function ar(n){return String(n).replace(/\d/g,function(d){return AR[d]})}
 function money(n){n=Math.round(n*100)/100;return ar(n)+" د.ك"}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -376,7 +376,7 @@ function aOverview(){
    '<div class="card stat"><span class="muted sm">الطلبات</span><b>'+ar(S.orders.length)+'</b></div>'+
    '<div class="card stat"><span class="muted sm">الطلاب</span><b>'+ar(S.students.length)+'</b></div>'+
    '<div class="card stat"><span class="muted sm">الكورسات المنشورة</span><b>'+ar(pubs().length)+'</b></div></div>'+
-   '<div class="card"><div class="box-h">مبيعات آخر ٧ أيام</div><div class="chart">'+days.map(function(d){return '<div><b>'+(d[1]?ar(d[1]):"")+'</b><i style="height:'+Math.round(d[1]/mx*96)+'px"></i><span>'+d[0]+'</span></div>'}).join("")+'</div></div>'+
+   '<div class="card"><div class="box-h">مبيعات آخر 7 أيام</div><div class="chart">'+days.map(function(d){return '<div><b>'+(d[1]?ar(d[1]):"")+'</b><i style="height:'+Math.round(d[1]/mx*96)+'px"></i><span>'+d[0]+'</span></div>'}).join("")+'</div></div>'+
    '<div class="card"><div class="box-h">الأكثر مبيعاً</div><p style="margin-top:4px">'+esc(best)+'</p></div>'+
    '<div class="card try"><h3>جرّب بنفسك</h3><ul>'+
    '<li><span>غيّر لون الموقع واسمه</span><button class="btn b-sm" data-act="atab" data-v="settings">الإعدادات</button></li>'+
@@ -409,8 +409,8 @@ function aOrders(){
    S.orders.slice().sort(function(a,b){return b.ts-a.ts}).map(function(o){return '<div class="rowi"><div><div class="t">'+esc(o.course)+(o.coupon?' <span class="pill">'+esc(o.coupon)+'</span>':'')+'</div><span class="muted sm">'+esc(o.student)+'، '+ago(o.ts)+'</span></div><b>'+money(o.amount)+'</b></div>'}).join("")+'</div></div>';
 }
 function aCoupons(){
-  return '<div class="a-title"><h1>الكوبونات</h1></div><div class="card"><form id="fCoupon" class="inline"><div class="field"><label for="kC">الكود</label><input class="in" id="kC" required dir="ltr" autocomplete="off" placeholder="SALE20"></div><div class="field"><label for="kP">الخصم ٪</label><input class="in" id="kP" type="number" min="1" max="100" required dir="ltr" value="20"></div><button class="btn b-acc">إضافة</button></form></div>'+
-   '<div class="card"><div class="rows">'+(S.coupons.length?S.coupons.map(function(k,i){return '<div class="rowi"><div><div class="t" dir="ltr" style="justify-content:flex-end">'+esc(k.code)+'</div><span class="muted sm">خصم '+ar(k.pct)+'٪</span></div><div class="acts"><button class="switch" role="switch" data-act="kTog" data-v="'+i+'" aria-checked="'+k.on+'" aria-label="تفعيل الكوبون"></button><button class="ic" data-act="kDel" data-v="'+i+'" aria-label="حذف الكوبون">✕</button></div></div>'}).join(""):'<p class="muted">ما في كوبونات.</p>')+'</div></div>';
+  return '<div class="a-title"><h1>الكوبونات</h1></div><div class="card"><form id="fCoupon" class="inline"><div class="field"><label for="kC">الكود</label><input class="in" id="kC" required dir="ltr" autocomplete="off" placeholder="SALE20"></div><div class="field"><label for="kP">الخصم %</label><input class="in" id="kP" type="number" min="1" max="100" required dir="ltr" value="20"></div><button class="btn b-acc">إضافة</button></form></div>'+
+   '<div class="card"><div class="rows">'+(S.coupons.length?S.coupons.map(function(k,i){return '<div class="rowi"><div><div class="t" dir="ltr" style="justify-content:flex-end">'+esc(k.code)+'</div><span class="muted sm">خصم '+ar(k.pct)+'%</span></div><div class="acts"><button class="switch" role="switch" data-act="kTog" data-v="'+i+'" aria-checked="'+k.on+'" aria-label="تفعيل الكوبون"></button><button class="ic" data-act="kDel" data-v="'+i+'" aria-label="حذف الكوبون">✕</button></div></div>'}).join(""):'<p class="muted">ما في كوبونات.</p>')+'</div></div>';
 }
 function aSettings(){
   var s=S.settings;

@@ -117,7 +117,7 @@ section{padding:56px 0}
 /* steps */
 .steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:22px}
 .steps li{counter-increment:s;display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start}
-.steps li::before{content:counter(s,arabic-indic);font-family:var(--display);font-weight:800;font-size:22px;width:52px;height:52px;border-radius:50%;background:var(--saffron);display:grid;place-items:center;line-height:1}
+.steps li::before{content:counter(s);font-family:var(--display);font-weight:800;font-size:22px;width:52px;height:52px;border-radius:50%;background:var(--saffron);display:grid;place-items:center;line-height:1}
 .steps b{font-family:var(--display);font-weight:600;display:block}
 .steps span{color:var(--muted);font-size:16px}
 @media(min-width:760px){.steps{grid-template-columns:1fr 1fr;gap:30px 48px}}
@@ -168,7 +168,7 @@ footer{padding-block:26px;color:var(--muted);font-size:14px}
           <div class="mock-in">
             <div class="mock-top"><span id="mName">أكاديمية نَسَق</span><b>دخول</b></div>
             <h3 id="mHead">تعلّم إدارة مشروعك خطوة بخطوة</h3>
-            <small id="mSub">٣ كورسات · دروس مسجلة</small>
+            <small id="mSub">3 كورسات · دروس مسجلة</small>
             <div class="mock-tiles">
               <div class="mock-tile"><div></div><span id="mT1">أساسيات المشروع</span></div>
               <div class="mock-tile"><div></div><span id="mT2">التسعير</span></div>
@@ -269,7 +269,7 @@ footer{padding-block:26px;color:var(--muted);font-size:14px}
       <div class="wrap">
         <div class="price">
           <div>
-            <div class="num"><small>يبدأ من</small>٢٬٠٠٠ دولار</div>
+            <div class="num"><small>يبدأ من</small>2,000 دولار</div>
             <p>دفعة واحدة مقابل البناء. السعر النهائي يتحدد بعد محادثة التعارف حسب عدد الكورسات والمزايا.</p>
           </div>
           <div>
@@ -311,8 +311,8 @@ footer{padding-block:26px;color:var(--muted);font-size:14px}
 <script>
 /* ---------- hero mock themes ---------- */
 var themes=[
- {bg:"#F4F6FF",ink:"#161B3A",acc:"#2F4BD8",on:"#fff",r:"14px",font:'"Alexandria",sans-serif',name:"أكاديمية نَسَق",head:"تعلّم إدارة مشروعك خطوة بخطوة",sub:"٣ كورسات · دروس مسجلة",t1:"أساسيات المشروع",t2:"التسعير"},
- {bg:"#F3EFE0",ink:"#15362B",acc:"#1F5A45",on:"#F3EFE0",r:"2px",font:'"Reem Kufi",sans-serif',name:"دار الخط",head:"اكتب بخط الرقعة من أول أسبوع",sub:"٤ كورسات · تمارين قابلة للطباعة",t1:"خط الرقعة",t2:"خط النسخ"},
+ {bg:"#F4F6FF",ink:"#161B3A",acc:"#2F4BD8",on:"#fff",r:"14px",font:'"Alexandria",sans-serif',name:"أكاديمية نَسَق",head:"تعلّم إدارة مشروعك خطوة بخطوة",sub:"3 كورسات · دروس مسجلة",t1:"أساسيات المشروع",t2:"التسعير"},
+ {bg:"#F3EFE0",ink:"#15362B",acc:"#1F5A45",on:"#F3EFE0",r:"2px",font:'"Reem Kufi",sans-serif',name:"دار الخط",head:"اكتب بخط الرقعة من أول أسبوع",sub:"4 كورسات · تمارين قابلة للطباعة",t1:"خط الرقعة",t2:"خط النسخ"},
  {bg:"#2A1424",ink:"#FBE9F1",acc:"#FF7A59",on:"#2A1424",r:"26px",font:'"IBM Plex Sans Arabic",sans-serif',name:"استوديو لقطة",head:"صوّر منتجاتك بجوالك",sub:"كورسان · دروس قصيرة",t1:"الإضاءة",t2:"التعديل"}
 ];
 var mock=document.getElementById("mock");
