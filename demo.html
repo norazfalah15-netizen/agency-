@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مثال منصة كورسات | واجهة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;600;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* One file, two faces: the student site and the owner's control panel. --acc and --r come from Settings. */
+  --acc:#2F4BD8;--r:16px;
+  --paper:#F4F6FB;--surface:#FFFFFF;--ink:#161B3A;--muted:#5A6082;--line:#DDE1EE;--sun:#F2B33D;--ok:#17603D;--bad:#B3261E;
+  --soft:color-mix(in srgb,var(--acc) 10%,#fff);
+  --display:"Alexandria","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75;padding-bottom:84px}
+h1,h2,h3{font-family:var(--display);line-height:1.4;margin:0;text-wrap:balance}
+p{margin:0}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+[hidden]{display:none !important}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px}
+.muted{color:var(--muted)}
+.sm{font-size:14px}
+
+/* demo strip */
+.strip{background:var(--ink);color:#fff;position:sticky;top:0;z-index:30}
+.strip .wrap{display:flex;align-items:center;gap:10px;padding-block:8px}
+.strip a{color:#fff;text-decoration:none;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:18px;flex:none}
+.seg{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px;flex:1;max-width:340px;margin-inline:auto}
+.seg button{flex:1;border:0;background:transparent;color:#fff;border-radius:999px;padding:6px 10px;font-family:var(--display);font-weight:600;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--sun);color:var(--ink)}
+.strip .tag{font-size:12px;opacity:.75;flex:none}
+
+/* buttons / inputs */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:999px;padding:11px 22px;font-family:var(--display);font-weight:600;font-size:15px;text-decoration:none;line-height:1.4}
+.b-acc{background:var(--acc);color:#fff}
+.b-sun{background:var(--sun);color:var(--ink)}
+.b-ghost{background:transparent;box-shadow:inset 0 0 0 1.5px var(--line);color:var(--ink)}
+.b-bad{background:transparent;box-shadow:inset 0 0 0 1.5px var(--bad);color:var(--bad)}
+.b-sm{padding:7px 14px;font-size:13px}
+.b-wide{width:100%}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:4px}
+.in{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font-size:16px}
+textarea.in{min-height:84px;resize:vertical;line-height:1.7}
+.field{margin-bottom:14px}
+.card{background:var(--surface);border-radius:var(--r);padding:18px}
+.pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12px;font-weight:600;background:var(--soft);color:var(--acc);white-space:nowrap}
+.pill.ok{background:#E6F4EC;color:var(--ok)}
+.pill.off{background:#EEE;color:#555}
+
+/* ===== student site ===== */
+.s-head{background:var(--surface);border-bottom:1px solid var(--line)}
+.s-head .wrap{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-block:12px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:19px;border:0;background:none;padding:0}
+.logo i{width:14px;height:14px;background:var(--acc);border-radius:4px;transform:rotate(45deg);display:block;flex:none}
+.s-nav{display:none;gap:4px}
+.s-nav button{border:0;background:none;padding:6px 14px;border-radius:999px;font-weight:500}
+.s-nav button[aria-current="true"]{background:var(--soft);color:var(--acc);font-weight:600}
+.tabs{position:fixed;bottom:0;right:0;left:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{border:0;background:none;padding:9px 4px 8px;display:grid;justify-items:center;gap:2px;font-size:12px;color:var(--muted)}
+.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tabs button[aria-current="true"]{color:var(--acc);font-weight:600}
+@media(min-width:800px){.s-nav{display:flex}.tabs{display:none}body{padding-bottom:40px}}
+
+.hero{background:var(--acc);color:#fff;border-radius:calc(var(--r) + 6px);padding:30px 22px;margin-top:16px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;left:-70px;bottom:-96px;width:150px;height:150px;background:var(--sun);border-radius:28px;transform:rotate(18deg)}
+.hero h1{font-size:clamp(26px,6.6vw,44px);font-weight:800;max-width:13em;position:relative;z-index:1}
+.hero p{opacity:.88;margin-top:8px;max-width:26em;position:relative;z-index:1}
+.hero .btn{margin-top:18px;position:relative;z-index:1}
+@media(min-width:800px){.hero{padding:52px 44px}}
+.sec{padding-top:30px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
+.sec-h h2{font-size:21px;font-weight:800}
+.link{border:0;background:none;color:var(--acc);font-weight:600;padding:0}
+.grid{display:grid;gap:14px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+.c-card{background:var(--surface);border:0;border-radius:var(--r);overflow:hidden;text-align:right;padding:0;display:grid;grid-template-columns:104px 1fr}
+@media(min-width:700px){.c-card{grid-template-columns:1fr}}
+.c-art{min-height:108px;display:grid;place-items:center}
+@media(min-width:700px){.c-art{height:136px}}
+.c-art svg{width:44px;height:44px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.c-in{padding:12px 14px;display:grid;gap:2px;align-content:center}
+.c-in h3{font-size:16px;font-weight:600}
+.c-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px;font-family:var(--display);font-weight:800}
+.prog{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:6px}
+.prog i{display:block;height:100%;background:var(--acc)}
+.feats{display:grid;gap:12px}
+@media(min-width:700px){.feats{grid-template-columns:repeat(3,1fr)}}
+.feats h3{font-size:16px;font-weight:600}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:0;background:var(--surface);border-radius:999px;padding:7px 16px;font-size:14px;box-shadow:inset 0 0 0 1px var(--line)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;box-shadow:none}
+.empty{background:var(--surface);border-radius:var(--r);padding:22px;color:var(--muted);text-align:center;display:grid;gap:12px;justify-items:center}
+.s-foot{margin-top:36px;padding-block:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+.cp-top{padding:16px 0 12px}
+.cp-top h1{font-size:clamp(22px,6vw,34px);font-weight:800}
+.cp{display:grid;gap:14px}
+@media(min-width:860px){.cp{grid-template-columns:1.55fr 1fr;align-items:start}.cp-learn{grid-column:1}}
+.player{background:var(--ink);border-radius:var(--r);aspect-ratio:16/9;display:grid;place-items:center;position:relative;overflow:hidden;color:#fff}
+.player .ttl{position:absolute;top:12px;right:14px;left:14px;font-size:14px;opacity:.9}
+.play{width:62px;height:62px;border-radius:50%;border:0;background:#fff;color:var(--ink);font-size:20px;line-height:1;padding-right:4px}
+.p-foot{position:absolute;bottom:0;right:0;left:0;padding:0 14px 10px;display:grid;gap:5px;font-size:12px;font-variant-numeric:tabular-nums;direction:ltr}
+.pbar{height:5px;background:rgba(255,255,255,.25);border-radius:99px;overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:var(--sun)}
+.lockmsg{text-align:center;padding:0 20px;display:grid;gap:10px;justify-items:center;font-size:15px}
+.side{display:grid;gap:14px}
+.pr{font-family:var(--display);font-weight:800;font-size:28px;line-height:1.2}
+.box-h{font-family:var(--display);font-weight:600;font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.lessons{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:2px}
+.lessons button{width:100%;display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:10px;text-align:right;background:transparent;border:0;border-radius:10px;padding:9px 8px;font-size:15px}
+.lessons button[aria-current="true"]{background:var(--soft);font-weight:600}
+.st{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--paper);color:var(--muted)}
+.st.ok{background:var(--ok);color:#fff}
+.st.lk{background:transparent}
+.learn{margin:8px 0 0;padding:0 20px 0 0;color:var(--muted);display:grid;gap:2px}
+
+/* ===== admin ===== */
+.adm{display:grid;gap:14px;padding-top:14px}
+.a-nav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.a-nav::-webkit-scrollbar{display:none}
+.a-nav button{flex:none;border:0;background:var(--surface);border-radius:999px;padding:8px 16px;font-size:14px;font-weight:500;box-shadow:inset 0 0 0 1px var(--line)}
+.a-nav button[aria-current="true"]{background:var(--ink);color:#fff;box-shadow:none;font-weight:600}
+@media(min-width:900px){
+  .adm{grid-template-columns:210px 1fr;align-items:start;gap:22px}
+  .a-nav{flex-direction:column;background:var(--surface);border-radius:var(--r);padding:10px;position:sticky;top:64px}
+  .a-nav button{box-shadow:none;text-align:right;border-radius:10px;background:transparent}
+}
+.a-main{display:grid;gap:14px;min-width:0}
+.a-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.a-title h1{font-size:22px;font-weight:800}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat b{display:block;font-family:var(--display);font-weight:800;font-size:24px;line-height:1.3;font-variant-numeric:tabular-nums}
+.chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:150px;margin-top:14px}
+.chart div{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%;font-size:11px;color:var(--muted)}
+.chart i{display:block;flex:none;width:100%;max-width:38px;background:var(--acc);border-radius:6px 6px 2px 2px;min-height:3px}
+.chart b{font-size:11px;font-weight:600;color:var(--ink)}
+.try{background:var(--ink);color:#fff}
+.try h3{font-size:16px;font-weight:600;margin-bottom:8px}
+.try ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.try li{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px}
+.try .btn{background:var(--sun);color:var(--ink);flex:none}
+.rows{display:grid;gap:0}
+.rowi{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.rowi:last-child{border-bottom:0;padding-bottom:0}
+.rowi:first-child{padding-top:0}
+.rowi .t{font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dot{width:12px;height:12px;border-radius:4px;flex:none;display:inline-block}
+.acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.sw button{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--line);padding:0}
+.sw button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+.segm{display:inline-flex;background:var(--paper);border-radius:999px;padding:3px}
+.segm button{border:0;background:none;border-radius:999px;padding:6px 16px;font-size:14px}
+.segm button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.tog{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.switch{width:50px;height:30px;border-radius:99px;border:0;background:#C7CCDD;position:relative;flex:none;padding:0}
+.switch::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .15s}
+.switch[aria-checked="true"]{background:var(--ok)}
+.switch[aria-checked="true"]::after{transform:translateX(-20px)}
+.les{display:grid;grid-template-columns:1fr 64px auto;gap:6px;align-items:center;margin-bottom:8px}
+.les .in{padding:8px 10px;font-size:15px}
+.ic{width:34px;height:34px;border-radius:8px;border:0;background:var(--paper);font-size:14px;padding:0}
+.ic:disabled{opacity:.35}
+.two{display:grid;gap:14px}
+@media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
+.inline{display:grid;grid-template-columns:1fr 90px auto;gap:8px;align-items:end}
+.inline .field{margin:0}
+
+.toast{position:fixed;bottom:96px;right:50%;transform:translateX(50%);background:var(--ink);color:#fff;border-radius:999px;padding:9px 20px;font-size:14px;z-index:60;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+dialog{border:0;border-radius:20px;padding:22px;width:min(92vw,410px);color:var(--ink);font-family:var(--body)}
+dialog::backdrop{background:rgba(22,27,58,.55)}
+dialog h3{font-size:20px;font-weight:800;margin-bottom:10px}
+.sum{background:var(--paper);border-radius:10px;padding:10px 12px;margin-bottom:14px;display:grid;gap:2px}
+.sum div{display:flex;justify-content:space-between;gap:10px}
+.sum .tot{font-weight:600;border-top:1px solid var(--line);padding-top:6px;margin-top:4px}
+.cpn{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:14px}
+.rowb{display:flex;gap:8px;margin-top:4px}
+.rowb .btn{flex:1}
+@media(prefers-reduced-motion:reduce){.switch::after{transition:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<dialog id="dlg"></dialog>
+
+<script>
+(function(){
+var KEY="wajha-demo-v2";
+var DAY=86400000;
+var COLORS=["#2F4BD8","#C2452D","#1F5A45","#7A2E5C","#0E7C86","#B8860B"];
+var ICON={
+ chart:'<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+ cam:'<svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/></svg>',
+ pen:'<svg viewBox="0 0 24 24"><path d="M4 20l4-1L20 7l-3-3L5 16l-1 4zM14 6l3 3"/></svg>',
+ book:'<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2V5zM4 21h15"/></svg>'
+};
+var TAB={
+ home:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9z"/></svg>',
+ courses:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+ mine:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5v-7z"/></svg>',
+ account:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg>'
+};
+
+function seed(){
+  var now=Date.now();
+  var courses=[
+   {id:"c1",cat:"أعمال",title:"إدارة المشاريع الصغيرة",desc:"من الفكرة إلى أول عميل: التخطيط، التسعير، والمتابعة.",price:25,color:"#2F4BD8",icon:"chart",pub:true,
+    learn:["تحويل الفكرة إلى خطة واضحة","حساب التكاليف وتحديد السعر","الوصول إلى أول عميل"],
+    lessons:[["مقدمة الكورس",4],["حدّد فكرتك",9],["احسب تكاليفك",11],["سعّر خدمتك",8],["أول عميل",10]]},
+   {id:"c2",cat:"تصوير",title:"تصوير المنتجات بالجوال",desc:"صور واضحة لمتجرك بدون كاميرا احترافية.",price:18,color:"#C2452D",icon:"cam",pub:true,
+    learn:["استخدام ضوء الشباك بدل الإضاءة الغالية","اختيار خلفية تبرز المنتج","زوايا تصوير تناسب المتاجر"],
+    lessons:[["مقدمة الكورس",3],["الإضاءة الطبيعية",8],["الخلفيات",7],["زوايا التصوير",9]]},
+   {id:"c3",cat:"فنون",title:"الخط العربي للمبتدئين",desc:"أساسيات خط الرقعة بتمارين يومية قصيرة.",price:15,color:"#1F5A45",icon:"pen",pub:true,
+    learn:["مسكة القلم الصحيحة","كتابة الحروف مفردة وموصولة","كتابة جملة كاملة بخط الرقعة"],
+    lessons:[["مقدمة الكورس",3],["مسكة القلم",6],["الحروف المفردة",12],["وصل الحروف",10],["كتابة جملة",9]]}
+  ];
+  var names=[["سارة","sara"],["عبدالله","abdullah"],["مريم","maryam"],["فهد","fahad"],["نوف","nouf"],["يوسف","yousef"]];
+  var students=names.map(function(n,i){return {id:"s"+i,name:n[0],email:n[1]+"@example.com",joined:now-(i*2+2)*DAY,courses:[]}});
+  var raw=[[6,0,"c1"],[6,1,"c3"],[5,2,"c2"],[4,0,"c2"],[3,3,"c1"],[3,4,"c3"],[2,5,"c1"],[1,2,"c1"],[1,1,"c2"],[0,4,"c1"]];
+  var orders=raw.map(function(r,i){
+    var c=courses.filter(function(x){return x.id===r[2]})[0];
+    students[r[1]].courses.push(c.id);
+    return {id:"o"+i,ts:now-r[0]*DAY-i*900000,student:students[r[1]].name,course:c.title,amount:c.price,coupon:""};
+  });
+  return {
+    settings:{name:"أكاديمية نَسَق",heroT:"تعلّم مهارة جديدة على راحتك",heroP:"كورسات مسجلة قصيرة. اشترِ الكورس مرة واحدة وارجع له متى ما بغيت.",color:"#2F4BD8",radius:16,freeFirst:true,wa:"0000 0000"},
+    courses:courses,students:students,orders:orders,
+    coupons:[{code:"WELCOME10",pct:10,on:true}],
+    user:null,owned:{},done:{}
+  };
+}
+var S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.settings)S=seed();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+var ui={mode:"site",page:"home",cid:null,lesson:0,cat:"الكل",q:"",apage:"overview",edit:null,arm:false,coupon:null};
+var timer=null,toastT=null;
+var $=function(id){return document.getElementById(id)};
+var AR="٠١٢٣٤٥٦٧٨٩";
+function ar(n){return String(n).replace(/\d/g,function(d){return AR[d]})}
+function money(n){n=Math.round(n*100)/100;return ar(n)+" د.ك"}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function uid(p){return p+Math.random().toString(36).slice(2,8)}
+function course(id){return S.courses.filter(function(c){return c.id===id})[0]}
+function mins(c){return c.lessons.reduce(function(a,l){return a+(+l[1]||0)},0)}
+function doneN(c){var d=S.done[c.id]||{};return c.lessons.filter(function(_,i){return d[i]}).length}
+function unlocked(c,i){return !!S.owned[c.id]||(S.settings.freeFirst&&i===0)}
+function toast(t){var el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){el.hidden=true},2200)}
+function ago(ts){var d=Math.floor((Date.now()-ts)/DAY);return d<=0?"اليوم":d===1?"أمس":"قبل "+ar(d)+" أيام"}
+function lessonsWord(n){return n===1?"درس واحد":n===2?"درسان":(n>=3&&n<=10?ar(n)+" دروس":ar(n)+" درساً")}
+
+/* ================= render ================= */
+function render(){
+  clearInterval(timer);
+  document.documentElement.style.setProperty("--acc",S.settings.color);
+  document.documentElement.style.setProperty("--r",S.settings.radius+"px");
+  var h='<div class="strip"><div class="wrap"><a href="index.html#work" aria-label="رجوع إلى واجهة">←</a>'+
+    '<div class="seg" role="group" aria-label="طريقة العرض"><button data-act="mode" data-v="site" aria-pressed="'+(ui.mode==="site")+'">موقع الطالب</button><button data-act="mode" data-v="admin" aria-pressed="'+(ui.mode==="admin")+'">لوحة التحكم</button></div>'+
+    '<span class="tag">مثال تجريبي</span></div></div>';
+  h+=ui.mode==="site"?site():admin();
+  $("app").innerHTML=h;
+}
+
+/* ---------- student site ---------- */
+function site(){
+  var nav=[["home","الرئيسية"],["courses","الكورسات"],["mine","كورساتي"],["account",S.user?"حسابي":"دخول"]];
+  var cur=ui.page==="course"?"courses":ui.page;
+  var h='<header class="s-head"><div class="wrap"><button class="logo" data-act="go" data-v="home"><i></i><span>'+esc(S.settings.name)+'</span></button>'+
+    '<nav class="s-nav">'+nav.map(function(n){return '<button data-act="go" data-v="'+n[0]+'" aria-current="'+(cur===n[0])+'">'+n[1]+'</button>'}).join("")+'</nav></div></header>';
+  h+='<main class="wrap">'+({home:sHome,courses:sCourses,course:sCourse,mine:sMine,account:sAccount}[ui.page]||sHome)()+
+    '<footer class="s-foot"><span>'+esc(S.settings.name)+'</span>'+(S.settings.wa?'<span>للتواصل واتساب: <span dir="ltr">'+esc(S.settings.wa)+'</span></span>':'')+'</footer></main>';
+  h+='<nav class="tabs">'+nav.map(function(n){return '<button data-act="go" data-v="'+n[0]+'" aria-current="'+(cur===n[0])+'">'+TAB[n[0]]+'<span>'+n[1]+'</span></button>'}).join("")+'</nav>';
+  return h;
+}
+function card(c){
+  var owned=S.owned[c.id],n=doneN(c),tot=c.lessons.length;
+  var foot=owned
+    ?'<span class="muted sm">أكملت '+ar(n)+' من '+ar(tot)+'</span><div class="prog"><i style="width:'+(tot?n/tot*100:0)+'%"></i></div>'
+    :'<div class="c-foot"><span>'+money(c.price)+'</span>'+(S.settings.freeFirst&&tot?'<span class="pill ok">الدرس الأول مجاني</span>':'')+'</div>';
+  return '<button class="c-card" data-act="open" data-v="'+c.id+'"><div class="c-art" style="background:'+c.color+'">'+(ICON[c.icon]||ICON.book)+'</div><div class="c-in"><span class="muted sm">'+esc(c.cat)+'</span><h3>'+esc(c.title)+'</h3><span class="muted sm">'+lessonsWord(tot)+'، '+ar(mins(c))+' دقيقة</span>'+foot+'</div></button>';
+}
+function pubs(){return S.courses.filter(function(c){return c.pub})}
+function sHome(){
+  var list=pubs().slice(0,3);
+  return '<section class="hero"><h1>'+esc(S.settings.heroT)+'</h1><p>'+esc(S.settings.heroP)+'</p><button class="btn b-sun" data-act="go" data-v="courses">تصفح الكورسات</button></section>'+
+   '<section class="sec"><div class="sec-h"><h2>أحدث الكورسات</h2><button class="link" data-act="go" data-v="courses">عرض الكل</button></div>'+
+   (list.length?'<div class="grid">'+list.map(card).join("")+'</div>':'<div class="empty">ما في كورسات منشورة حالياً.</div>')+'</section>'+
+   '<section class="sec"><div class="sec-h"><h2>كيف تتعلم معنا؟</h2></div><div class="feats">'+
+   '<div class="card"><h3>دروس مسجلة</h3><p class="muted">تشوفها بالوقت اللي يناسبك وتعيدها متى ما بغيت.</p></div>'+
+   '<div class="card"><h3>دفعة واحدة</h3><p class="muted">تشتري الكورس مرة وحدة ويبقى في حسابك.</p></div>'+
+   '<div class="card"><h3>تابع تقدمك</h3><p class="muted">كل درس تخلصه ينحسب، وتكمل من وين وقفت.</p></div></div></section>';
+}
+function cats(){var o=["الكل"];pubs().forEach(function(c){if(o.indexOf(c.cat)<0)o.push(c.cat)});return o}
+function sCourses(){
+  return '<div class="sec"><div class="sec-h"><h2>كل الكورسات</h2></div><input class="in" id="q" type="search" placeholder="ابحث عن كورس" value="'+esc(ui.q)+'" aria-label="بحث">'+
+   '<div class="chips">'+cats().map(function(n){return '<button class="chip" data-act="cat" data-v="'+esc(n)+'" aria-pressed="'+(n===ui.cat)+'">'+esc(n)+'</button>'}).join("")+'</div><div id="grid">'+gridHtml()+'</div></div>';
+}
+function gridHtml(){
+  var q=ui.q.trim();
+  var list=pubs().filter(function(c){return (ui.cat==="الكل"||c.cat===ui.cat)&&(!q||c.title.indexOf(q)>=0||c.desc.indexOf(q)>=0)});
+  return list.length?'<div class="grid">'+list.map(card).join("")+'</div>':'<div class="empty">ما لقينا كورساً بهذا الاسم.</div>';
+}
+function sMine(){
+  var list=S.courses.filter(function(c){return S.owned[c.id]});
+  return '<div class="sec"><div class="sec-h"><h2>كورساتي</h2></div>'+(list.length?'<div class="grid">'+list.map(card).join("")+'</div>'
+   :'<div class="empty"><span>ما اشتركت في أي كورس للحين.</span><button class="btn b-acc" data-act="go" data-v="courses">تصفح الكورسات</button></div>')+'</div>';
+}
+function sAccount(){
+  if(!S.user)return '<div class="sec"><div class="card" style="max-width:420px;margin-inline:auto"><h2 style="font-size:20px;font-weight:800;margin-bottom:4px">تسجيل الدخول</h2><p class="muted sm" style="margin-bottom:14px">تجريبي: اكتب أي اسم وبريد.</p>'+
+   '<form id="fLogin"><div class="field"><label for="lName">الاسم</label><input class="in" id="lName" required autocomplete="off"></div><div class="field"><label for="lMail">البريد الإلكتروني</label><input class="in" id="lMail" type="email" required dir="ltr" autocomplete="off"></div><button class="btn b-acc b-wide">دخول</button></form></div></div>';
+  var mine=S.orders.filter(function(o){return o.sid===S.user.id});
+  return '<div class="sec"><div class="sec-h"><h2>حسابي</h2></div><div class="two"><div class="card"><div class="box-h">'+esc(S.user.name)+'</div><p class="muted" dir="ltr" style="text-align:right">'+esc(S.user.email)+'</p><button class="btn b-ghost b-sm" style="margin-top:12px" data-act="logout">تسجيل الخروج</button></div>'+
+   '<div class="card"><div class="box-h">مشترياتي</div>'+(mine.length?'<div class="rows" style="margin-top:10px">'+mine.map(function(o){return '<div class="rowi"><div><div class="t">'+esc(o.course)+'</div><span class="muted sm">'+ago(o.ts)+'</span></div><b>'+money(o.amount)+'</b></div>'}).join("")+'</div>':'<p class="muted" style="margin-top:6px">ما في مشتريات للحين.</p>')+'</div></div></div>';
+}
+function sCourse(){
+  var c=course(ui.cid);if(!c){ui.page="courses";return sCourses()}
+  var owned=S.owned[c.id],tot=c.lessons.length,n=doneN(c),d=S.done[c.id]||{};
+  if(ui.lesson>=tot)ui.lesson=0;
+  var ls=c.lessons.map(function(l,i){
+    var st=d[i]?'<span class="st ok">✓</span>':(unlocked(c,i)?'<span class="st">'+ar(i+1)+'</span>':'<span class="st lk">🔒</span>');
+    var tag=(!owned&&S.settings.freeFirst&&i===0)?"مجاني":ar(+l[1]||0)+" د";
+    return '<li><button data-act="lesson" data-v="'+i+'" aria-current="'+(i===ui.lesson)+'">'+st+'<span>'+esc(l[0])+'</span><span class="muted sm">'+tag+'</span></button></li>';
+  }).join("");
+  var pl;
+  if(!tot)pl='<div class="lockmsg">الدروس تُضاف قريباً.</div>';
+  else if(owned&&n===tot&&d[ui.lesson])pl='<div class="lockmsg"><b>أكملت الكورس</b><span>تقدر ترجع لأي درس من القائمة.</span></div>';
+  else if(unlocked(c,ui.lesson))pl='<span class="ttl">'+ar(ui.lesson+1)+'. '+esc(c.lessons[ui.lesson][0])+'</span><button class="play" data-act="play" id="playBtn" aria-label="تشغيل الدرس">▶</button><div class="p-foot"><div class="pbar"><i id="pg"></i></div><span id="pt">0:00 / '+(+c.lessons[ui.lesson][1]||0)+':00</span></div>';
+  else pl='<div class="lockmsg"><span>هذا الدرس مقفل. اشترِ الكورس لفتح كل الدروس.</span><button class="btn b-sun" data-act="buy">اشترِ الكورس</button></div>';
+  return '<div class="cp-top"><span class="muted sm">'+esc(c.cat)+'</span><h1>'+esc(c.title)+'</h1><p class="muted">'+esc(c.desc)+'</p></div><div class="cp"><div class="player">'+pl+'</div><aside class="side">'+
+   (owned?'':'<div class="card" style="display:grid;gap:8px"><div class="pr">'+money(c.price)+'</div><span class="muted sm">دفعة واحدة'+(S.settings.freeFirst?'. الدرس الأول مجاني.':'.')+'</span><button class="btn b-sun b-wide" data-act="buy">اشترِ الكورس</button></div>')+
+   '<div class="card"><div class="box-h">الدروس <span class="muted sm" style="font-family:var(--body);font-weight:400">'+(owned?'أكملت '+ar(n)+' من '+ar(tot):lessonsWord(tot)+'، '+ar(mins(c))+' دقيقة')+'</span></div><div class="prog" style="margin:10px 0 4px"><i style="width:'+(tot?n/tot*100:0)+'%"></i></div><ul class="lessons">'+ls+'</ul></div></aside>'+
+   (c.learn.length?'<div class="card cp-learn"><div class="box-h">ماذا ستتعلم؟</div><ul class="learn">'+c.learn.map(function(t){return '<li>'+esc(t)+'</li>'}).join("")+'</ul></div>':'')+'</div>';
+}
+
+/* ---------- admin ---------- */
+function admin(){
+  var tabs=[["overview","نظرة عامة"],["courses","الكورسات"],["students","الطلاب"],["orders","الطلبات"],["coupons","الكوبونات"],["settings","الإعدادات"]];
+  var cur=ui.apage==="edit"?"courses":ui.apage;
+  return '<div class="wrap adm"><nav class="a-nav">'+tabs.map(function(t){return '<button data-act="atab" data-v="'+t[0]+'" aria-current="'+(cur===t[0])+'">'+t[1]+'</button>'}).join("")+'</nav><main class="a-main">'+
+   ({overview:aOverview,courses:aCourses,edit:aEdit,students:aStudents,orders:aOrders,coupons:aCoupons,settings:aSettings}[ui.apage])()+'</main></div>';
+}
+function aOverview(){
+  var total=S.orders.reduce(function(a,o){return a+o.amount},0);
+  var days=[],names=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"],mx=1;
+  var t0=new Date();t0.setHours(0,0,0,0);
+  for(var i=6;i>=0;i--){var a=t0.getTime()-i*DAY,b=a+DAY,sum=S.orders.filter(function(o){return o.ts>=a&&o.ts<b}).reduce(function(x,o){return x+o.amount},0);days.push([names[new Date(a).getDay()],sum]);if(sum>mx)mx=sum}
+  var cnt={};S.orders.forEach(function(o){cnt[o.course]=(cnt[o.course]||0)+1});
+  var best=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a]})[0]||"لا يوجد";
+  return '<div class="a-title"><h1>نظرة عامة</h1></div><div class="stats">'+
+   '<div class="card stat"><span class="muted sm">المبيعات</span><b>'+money(total)+'</b></div>'+
+   '<div class="card stat"><span class="muted sm">الطلبات</span><b>'+ar(S.orders.length)+'</b></div>'+
+   '<div class="card stat"><span class="muted sm">الطلاب</span><b>'+ar(S.students.length)+'</b></div>'+
+   '<div class="card stat"><span class="muted sm">الكورسات المنشورة</span><b>'+ar(pubs().length)+'</b></div></div>'+
+   '<div class="card"><div class="box-h">مبيعات آخر ٧ أيام</div><div class="chart">'+days.map(function(d){return '<div><b>'+(d[1]?ar(d[1]):"")+'</b><i style="height:'+Math.round(d[1]/mx*96)+'px"></i><span>'+d[0]+'</span></div>'}).join("")+'</div></div>'+
+   '<div class="card"><div class="box-h">الأكثر مبيعاً</div><p style="margin-top:4px">'+esc(best)+'</p></div>'+
+   '<div class="card try"><h3>جرّب بنفسك</h3><ul>'+
+   '<li><span>غيّر لون الموقع واسمه</span><button class="btn b-sm" data-act="atab" data-v="settings">الإعدادات</button></li>'+
+   '<li><span>أضف كورساً جديداً</span><button class="btn b-sm" data-act="newCourse">إضافة</button></li>'+
+   '<li><span>اشترِ كورساً كطالب وشوف الطلب يوصل هنا</span><button class="btn b-sm" data-act="mode" data-v="site">الموقع</button></li></ul></div>';
+}
+function aCourses(){
+  return '<div class="a-title"><h1>الكورسات</h1><button class="btn b-acc b-sm" data-act="newCourse">إضافة كورس</button></div><div class="card"><div class="rows">'+
+   (S.courses.length?S.courses.map(function(c){return '<div class="rowi"><div><div class="t"><span class="dot" style="background:'+c.color+'"></span>'+esc(c.title||"كورس بدون اسم")+' <span class="pill '+(c.pub?"ok":"off")+'">'+(c.pub?"منشور":"مخفي")+'</span></div><span class="muted sm">'+money(c.price)+'، '+lessonsWord(c.lessons.length)+'</span></div><div class="acts"><button class="btn b-ghost b-sm" data-act="edit" data-v="'+c.id+'">تعديل</button></div></div>'}).join(""):'<p class="muted">ما في كورسات. أضف أول كورس.</p>')+'</div></div>';
+}
+function aEdit(){
+  var c=course(ui.edit);if(!c){ui.apage="courses";return aCourses()}
+  var les=c.lessons.map(function(l,i){return '<div class="les"><input class="in" data-f="l.t" data-i="'+i+'" value="'+esc(l[0])+'" aria-label="اسم الدرس '+ar(i+1)+'"><input class="in" data-f="l.m" data-i="'+i+'" type="number" min="0" value="'+(+l[1]||0)+'" aria-label="المدة بالدقائق" dir="ltr"><span class="acts"><button class="ic" data-act="lUp" data-v="'+i+'" aria-label="تحريك للأعلى"'+(i===0?" disabled":"")+'>↑</button><button class="ic" data-act="lDown" data-v="'+i+'" aria-label="تحريك للأسفل"'+(i===c.lessons.length-1?" disabled":"")+'>↓</button><button class="ic" data-act="lDel" data-v="'+i+'" aria-label="حذف الدرس">✕</button></span></div>'}).join("");
+  return '<div class="a-title"><h1>تعديل الكورس</h1><button class="btn b-acc b-sm" data-act="doneEdit">تم</button></div>'+
+   '<div class="card"><div class="field"><label for="eT">اسم الكورس</label><input class="in" id="eT" data-f="c.title" value="'+esc(c.title)+'"></div>'+
+   '<div class="two"><div class="field"><label for="eC">التصنيف</label><input class="in" id="eC" data-f="c.cat" value="'+esc(c.cat)+'"></div><div class="field"><label for="eP">السعر (د.ك)</label><input class="in" id="eP" data-f="c.price" type="number" min="0" step="0.5" value="'+c.price+'" dir="ltr"></div></div>'+
+   '<div class="field"><label for="eD">الوصف</label><textarea class="in" id="eD" data-f="c.desc">'+esc(c.desc)+'</textarea></div>'+
+   '<div class="field"><label>لون الكورس</label><div class="sw">'+COLORS.map(function(x){return '<button data-act="cColor" data-v="'+x+'" style="background:'+x+'" aria-pressed="'+(c.color===x)+'" aria-label="لون"></button>'}).join("")+'</div></div>'+
+   '<div class="tog"><div><b>منشور في الموقع</b><div class="muted sm">لو قفلته، الكورس يختفي عن الطلاب.</div></div><button class="switch" role="switch" data-act="cPub" aria-checked="'+c.pub+'" aria-label="منشور"></button></div></div>'+
+   '<div class="card"><div class="box-h" style="margin-bottom:10px">الدروس <span class="muted sm" style="font-family:var(--body);font-weight:400">الاسم والمدة بالدقائق</span></div>'+les+'<button class="btn b-ghost b-sm" data-act="lAdd">إضافة درس</button></div>'+
+   '<div class="card"><div class="field" style="margin:0"><label for="eL">ماذا سيتعلم الطالب؟ (كل نقطة في سطر)</label><textarea class="in" id="eL" data-f="c.learn">'+esc(c.learn.join("\n"))+'</textarea></div></div>'+
+   '<div><button class="btn b-bad b-sm" data-act="cDel">'+(ui.arm?"اضغط مرة ثانية للتأكيد":"حذف الكورس")+'</button></div>';
+}
+function aStudents(){
+  return '<div class="a-title"><h1>الطلاب</h1><span class="muted sm">'+ar(S.students.length)+' طالب</span></div><div class="card"><div class="rows">'+
+   S.students.slice().sort(function(a,b){return b.joined-a.joined}).map(function(s){return '<div class="rowi"><div><div class="t">'+esc(s.name)+'</div><span class="muted sm" dir="ltr">'+esc(s.email)+'</span></div><div style="text-align:left"><span class="pill">'+(s.courses.length?ar(s.courses.length)+" كورس":"بدون اشتراك")+'</span><div class="muted sm">انضم '+ago(s.joined)+'</div></div></div>'}).join("")+'</div></div>';
+}
+function aOrders(){
+  return '<div class="a-title"><h1>الطلبات</h1><span class="muted sm">'+ar(S.orders.length)+' طلب</span></div><div class="card"><div class="rows">'+
+   S.orders.slice().sort(function(a,b){return b.ts-a.ts}).map(function(o){return '<div class="rowi"><div><div class="t">'+esc(o.course)+(o.coupon?' <span class="pill">'+esc(o.coupon)+'</span>':'')+'</div><span class="muted sm">'+esc(o.student)+'، '+ago(o.ts)+'</span></div><b>'+money(o.amount)+'</b></div>'}).join("")+'</div></div>';
+}
+function aCoupons(){
+  return '<div class="a-title"><h1>الكوبونات</h1></div><div class="card"><form id="fCoupon" class="inline"><div class="field"><label for="kC">الكود</label><input class="in" id="kC" required dir="ltr" autocomplete="off" placeholder="SALE20"></div><div class="field"><label for="kP">الخصم ٪</label><input class="in" id="kP" type="number" min="1" max="100" required dir="ltr" value="20"></div><button class="btn b-acc">إضافة</button></form></div>'+
+   '<div class="card"><div class="rows">'+(S.coupons.length?S.coupons.map(function(k,i){return '<div class="rowi"><div><div class="t" dir="ltr" style="justify-content:flex-end">'+esc(k.code)+'</div><span class="muted sm">خصم '+ar(k.pct)+'٪</span></div><div class="acts"><button class="switch" role="switch" data-act="kTog" data-v="'+i+'" aria-checked="'+k.on+'" aria-label="تفعيل الكوبون"></button><button class="ic" data-act="kDel" data-v="'+i+'" aria-label="حذف الكوبون">✕</button></div></div>'}).join(""):'<p class="muted">ما في كوبونات.</p>')+'</div></div>';
+}
+function aSettings(){
+  var s=S.settings;
+  return '<div class="a-title"><h1>الإعدادات</h1><button class="btn b-acc b-sm" data-act="mode" data-v="site">شوف النتيجة</button></div>'+
+   '<div class="card"><div class="field"><label for="sN">اسم الموقع</label><input class="in" id="sN" data-f="s.name" value="'+esc(s.name)+'"></div>'+
+   '<div class="field"><label for="sT">عنوان الصفحة الرئيسية</label><input class="in" id="sT" data-f="s.heroT" value="'+esc(s.heroT)+'"></div>'+
+   '<div class="field" style="margin:0"><label for="sP">النص تحت العنوان</label><textarea class="in" id="sP" data-f="s.heroP">'+esc(s.heroP)+'</textarea></div></div>'+
+   '<div class="card"><div class="field"><label>اللون الرئيسي</label><div class="sw">'+COLORS.map(function(x){return '<button data-act="sColor" data-v="'+x+'" style="background:'+x+'" aria-pressed="'+(s.color===x)+'" aria-label="لون"></button>'}).join("")+'</div></div>'+
+   '<div class="field" style="margin:0"><label>شكل الزوايا</label><div class="segm">'+[[4,"حادة"],[16,"متوسطة"],[28,"دائرية"]].map(function(r){return '<button data-act="sRad" data-v="'+r[0]+'" aria-pressed="'+(s.radius===r[0])+'">'+r[1]+'</button>'}).join("")+'</div></div></div>'+
+   '<div class="card"><div class="tog"><div><b>الدرس الأول مجاني</b><div class="muted sm">الزائر يجرب أول درس قبل الشراء.</div></div><button class="switch" role="switch" data-act="sFree" aria-checked="'+s.freeFirst+'" aria-label="الدرس الأول مجاني"></button></div></div>'+
+   '<div class="card"><div class="field" style="margin:0"><label for="sW">رقم واتساب للتواصل</label><input class="in" id="sW" data-f="s.wa" value="'+esc(s.wa)+'" dir="ltr" inputmode="tel"></div></div>'+
+   '<div><button class="btn b-ghost b-sm" data-act="reset">إرجاع المثال كما كان</button></div>';
+}
+
+/* ================= checkout ================= */
+function openBuy(){
+  var c=course(ui.cid);if(!c)return;ui.coupon=null;
+  drawBuy();$("dlg").showModal();
+}
+function drawBuy(){
+  var c=course(ui.cid),k=ui.coupon,final=k?c.price*(1-k.pct/100):c.price;
+  $("dlg").innerHTML='<form id="fBuy"><h3>إتمام الشراء</h3><div class="sum"><div><span>'+esc(c.title)+'</span><span>'+money(c.price)+'</span></div>'+(k?'<div><span>خصم '+esc(k.code)+'</span><span>- '+money(c.price-final)+'</span></div>':'')+'<div class="tot"><span>المجموع</span><span>'+money(final)+'</span></div></div>'+
+   '<label for="bK">كود الخصم</label><div class="cpn"><input class="in" id="bK" dir="ltr" autocomplete="off" placeholder="'+(S.coupons.filter(function(x){return x.on})[0]||{code:""}).code+'" value="'+(k?esc(k.code):"")+'"><button class="btn b-ghost" type="button" data-act="applyK">تطبيق</button></div>'+
+   (S.user?'':'<div class="field"><label for="bN">الاسم</label><input class="in" id="bN" required autocomplete="off"></div><div class="field"><label for="bM">البريد الإلكتروني</label><input class="in" id="bM" type="email" required dir="ltr" autocomplete="off"></div>')+
+   '<div class="field"><label for="bC">رقم البطاقة</label><input class="in" id="bC" inputmode="numeric" placeholder="0000 0000 0000 0000" dir="ltr" autocomplete="off"></div>'+
+   '<p class="muted sm" style="margin-bottom:10px">تجريبي: ما راح يُسحب أي مبلغ.</p><div class="rowb"><button class="btn b-acc">ادفع '+money(final)+'</button><button class="btn b-ghost" type="button" data-act="closeDlg">إلغاء</button></div></form>';
+}
+function ensureUser(name,email){
+  var s={id:uid("s"),name:name,email:email,joined:Date.now(),courses:[]};
+  S.students.push(s);S.user={id:s.id,name:name,email:email};return s;
+}
+function pay(){
+  var c=course(ui.cid),k=ui.coupon,final=k?c.price*(1-k.pct/100):c.price;
+  if(!S.user)ensureUser($("bN").value.trim(),$("bM").value.trim());
+  var st=S.students.filter(function(x){return x.id===S.user.id})[0];
+  if(st&&st.courses.indexOf(c.id)<0)st.courses.push(c.id);
+  S.orders.push({id:uid("o"),ts:Date.now(),sid:S.user.id,student:S.user.name,course:c.title,amount:Math.round(final*100)/100,coupon:k?k.code:""});
+  S.owned[c.id]=true;save();$("dlg").close();render();toast("تم الاشتراك. كل الدروس مفتوحة");
+}
+
+/* ================= player ================= */
+function play(){
+  var c=course(ui.cid),len=+c.lessons[ui.lesson][1]||1,w=0;$("playBtn").hidden=true;
+  clearInterval(timer);
+  timer=setInterval(function(){
+    w+=2.5;var pg=$("pg");if(!pg){clearInterval(timer);return}
+    pg.style.width=w+"%";
+    var s=Math.round(len*60*w/100),m=Math.floor(s/60),r=s%60;
+    $("pt").textContent=m+":"+(r<10?"0":"")+r+" / "+len+":00";
+    if(w>=100){clearInterval(timer);(S.done[c.id]=S.done[c.id]||{})[ui.lesson]=true;if(ui.lesson+1<c.lessons.length)ui.lesson++;save();render()}
+  },100);
+}
+
+/* ================= events ================= */
+var A={
+ mode:function(v){ui.mode=v;ui.arm=false;render();window.scrollTo(0,0)},
+ go:function(v){ui.page=v;render();window.scrollTo(0,0)},
+ open:function(v){ui.page="course";ui.cid=v;ui.lesson=0;render();window.scrollTo(0,0)},
+ cat:function(v){ui.cat=v;render()},
+ lesson:function(v){ui.lesson=+v;render()},
+ play:play,buy:openBuy,
+ closeDlg:function(){$("dlg").close()},
+ applyK:function(){var v=$("bK").value.trim().toUpperCase();var k=S.coupons.filter(function(x){return x.on&&x.code.toUpperCase()===v})[0];ui.coupon=k||null;drawBuy();toast(k?"تم تطبيق الخصم":"الكود غير صحيح")},
+ logout:function(){S.user=null;save();render();toast("تم تسجيل الخروج")},
+ atab:function(v){ui.apage=v;ui.arm=false;render();window.scrollTo(0,0)},
+ newCourse:function(){var c={id:uid("c"),cat:"عام",title:"كورس جديد",desc:"",price:20,color:COLORS[S.courses.length%COLORS.length],icon:"book",pub:true,learn:[],lessons:[["مقدمة الكورس",5]]};S.courses.unshift(c);save();ui.mode="admin";ui.apage="edit";ui.edit=c.id;render();window.scrollTo(0,0);toast("تمت إضافة الكورس. عدّل بياناته")},
+ edit:function(v){ui.apage="edit";ui.edit=v;ui.arm=false;render();window.scrollTo(0,0)},
+ doneEdit:function(){ui.apage="courses";render();toast("تم الحفظ")},
+ cColor:function(v){course(ui.edit).color=v;save();render()},
+ cPub:function(){var c=course(ui.edit);c.pub=!c.pub;save();render();toast(c.pub?"الكورس منشور":"الكورس مخفي")},
+ cDel:function(){if(!ui.arm){ui.arm=true;render();return}S.courses=S.courses.filter(function(c){return c.id!==ui.edit});ui.arm=false;ui.apage="courses";save();render();toast("تم حذف الكورس")},
+ lAdd:function(){course(ui.edit).lessons.push(["درس جديد",5]);save();render()},
+ lDel:function(v){course(ui.edit).lessons.splice(+v,1);save();render()},
+ lUp:function(v){var l=course(ui.edit).lessons,i=+v;if(i>0){l.splice(i-1,0,l.splice(i,1)[0]);save();render()}},
+ lDown:function(v){var l=course(ui.edit).lessons,i=+v;if(i<l.length-1){l.splice(i+1,0,l.splice(i,1)[0]);save();render()}},
+ kTog:function(v){S.coupons[+v].on=!S.coupons[+v].on;save();render()},
+ kDel:function(v){S.coupons.splice(+v,1);save();render()},
+ sColor:function(v){S.settings.color=v;save();render();toast("تم تغيير اللون")},
+ sRad:function(v){S.settings.radius=+v;save();render()},
+ sFree:function(){S.settings.freeFirst=!S.settings.freeFirst;save();render()},
+ reset:function(){S=seed();save();ui.page="home";render();toast("رجع المثال كما كان")}
+};
+document.addEventListener("click",function(e){
+  var el=e.target.closest("[data-act]");if(!el)return;
+  var f=A[el.dataset.act];if(f)f(el.dataset.v);
+});
+document.addEventListener("input",function(e){
+  var el=e.target;
+  if(el.id==="q"){ui.q=el.value;$("grid").innerHTML=gridHtml();return}
+  var f=el.dataset.f;if(!f)return;
+  var v=el.value,c=course(ui.edit),s=S.settings;
+  if(f==="s.name")s.name=v;else if(f==="s.heroT")s.heroT=v;else if(f==="s.heroP")s.heroP=v;else if(f==="s.wa")s.wa=v;
+  else if(c){
+    if(f==="c.title")c.title=v;else if(f==="c.cat")c.cat=v;else if(f==="c.desc")c.desc=v;
+    else if(f==="c.price")c.price=Math.max(0,+v||0);
+    else if(f==="c.learn")c.learn=v.split("\n").map(function(x){return x.trim()}).filter(Boolean);
+    else if(f==="l.t")c.lessons[+el.dataset.i][0]=v;
+    else if(f==="l.m")c.lessons[+el.dataset.i][1]=Math.max(0,+v||0);
+  }
+  save();
+});
+document.addEventListener("submit",function(e){
+  e.preventDefault();var id=e.target.id;
+  if(id==="fLogin"){ensureUser($("lName").value.trim(),$("lMail").value.trim());save();render();toast("أهلاً "+S.user.name)}
+  else if(id==="fBuy")pay();
+  else if(id==="fCoupon"){var code=$("kC").value.trim().toUpperCase(),p=Math.min(100,Math.max(1,+$("kP").value||0));if(code){S.coupons.unshift({code:code,pct:p,on:true});save();render();toast("تمت إضافة الكوبون")}}
+});
+if(location.hash==="#admin")ui.mode="admin";
+render();
+})();
+</script>
+</body>
+</html>
